@@ -38,7 +38,7 @@ hdfs dfs -ls finalproject/colrect
 
 # Starts the Hive environment
 hive
-use skashif;
+use username;
 show tables;
 
 # Create table cancerdata
@@ -75,22 +75,22 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cancerdata
    CS_Tumor_Size BIGINT,
    CS_Extension BIGINT)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-STORED AS TEXTFILE LOCATION '/user/skashif/finalproject/cancerdata'
+STORED AS TEXTFILE LOCATION '/user/username/finalproject/cancerdata'
 TBLPROPERTIES ('skip.header.line.count'='1');
 
 # See the structure info of the table cancerdata
 describe cancerdata;
 
 # Load the data files into table
-LOAD DATA INPATH '/user/skashif/finalproject/colrect/COLRECT.csv' OVERWRITE INTO TABLE cancerdata;
-LOAD DATA INPATH '/user/skashif/finalproject/breast/BREAST.csv' INTO TABLE cancerdata;
-LOAD DATA INPATH '/user/skashif/finalproject/digothr/DIGOTHR.csv' INTO TABLE cancerdata;
-LOAD DATA INPATH '/user/skashif/finalproject/femgen/FEMGEN.csv' INTO TABLE cancerdata;
-LOAD DATA INPATH '/user/skashif/finalproject/lymyleuk/LYMYLEUK.csv' INTO TABLE cancerdata;
-LOAD DATA INPATH '/user/skashif/finalproject/other/OTHER.csv' INTO TABLE cancerdata;
-LOAD DATA INPATH '/user/skashif/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
-LOAD DATA INPATH '/user/skashif/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
-LOAD DATA INPATH '/user/skashif/finalproject/malegen/MALEGEN.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/colrect/COLRECT.csv' OVERWRITE INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/breast/BREAST.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/digothr/DIGOTHR.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/femgen/FEMGEN.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/lymyleuk/LYMYLEUK.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/other/OTHER.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/username/finalproject/malegen/MALEGEN.csv' INTO TABLE cancerdata;
 
 # Query the content of table cancerdata
 SELECT * FROM cancerdata LIMIT 20;
@@ -105,7 +105,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cleantablefinal
      Year_of_diagnosis BIGINT,
      Primary_Site STRING)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-STORED AS TEXTFILE LOCATION '/user/skashif/finalproject/cleantablefinal'
+STORED AS TEXTFILE LOCATION '/user/username/finalproject/cleantablefinal'
 TBLPROPERTIES ('skip.header.line.count'='1');
 
 # See the structure info of the table cleantablefinal
