@@ -1,11 +1,16 @@
-#remotely access your AWS Hadoop Big Data EMRs
-ssh skashif@34.221.40.43
---------download the data files
+# Remotely access your AWS Hadoop Big Data EMRs
+ssh username@34.221.40.43
+
+# Download the data files
 wget https://www.dropbox.com/s/qccjt2jah6ewif6/teamproject1.zip?dl=0
---------unzip files
+
+# Unzip files
 unzip teamproject1.zip?dl=0
+
+# Check if the file exist
 ls
---------upload the files to hdfs folder 
+
+# upload the files to hdfs folder 
 hdfs dfs -mkdir finalproject
 hdfs dfs -ls finalproject
 hdfs dfs -mkdir finalproject/cancerdata
@@ -30,12 +35,14 @@ hdfs dfs -put teamproject/OTHER.csv finalproject/other
 hdfs dfs -put teamproject/RESPIR.csv finalproject/respir
 hdfs dfs -put teamproject/URINARY.csv finalproject/urinary
 hdfs dfs -ls finalproject/colrect
---------starts the Hive environment
+
+# Starts the Hive environment
 hive
 use skashif;
 show tables;
-DROP TABLE IF EXISTS cancerdata;
---------creat table cancerdata 
+
+# Create table cancerdata
+DROP TABLE IF EXISTS cancerdata; 
 CREATE EXTERNAL TABLE IF NOT EXISTS cancerdata
   (Patient_ID BIGINT,
    SEER_Registry_ID BIGINT,
@@ -71,7 +78,10 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE LOCATION '/user/skashif/finalproject/cancerdata'
 TBLPROPERTIES ('skip.header.line.count'='1');
 
+# See the structure info of the table cancerdata
 describe cancerdata;
+
+# Load the data files into table
 LOAD DATA INPATH '/user/skashif/finalproject/colrect/COLRECT.csv' OVERWRITE INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/skashif/finalproject/breast/BREAST.csv' INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/skashif/finalproject/digothr/DIGOTHR.csv' INTO TABLE cancerdata;
@@ -81,10 +91,15 @@ LOAD DATA INPATH '/user/skashif/finalproject/other/OTHER.csv' INTO TABLE cancerd
 LOAD DATA INPATH '/user/skashif/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/skashif/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/skashif/finalproject/malegen/MALEGEN.csv' INTO TABLE cancerdata;
+
+# Query the content of table cancerdata
 SELECT * FROM cancerdata LIMIT 20;
 SELECT * FROM cancerdata GROUP BY primary_site;
-select race_ethnicity, primary_site, age_at_diagnosis from cancerdata ASC LIMIT 100; 
+SELECT race_ethnicity, primary_site, age_at_diagnosis from cancerdata ASC LIMIT 100; 
 SELECT primary_site FROM cancerdata GROUP BY primary_site ORDER BY primary_site;
+
+# Extracts data from the cancerdata table
+# Create table cleantablefinal for storing info from cancerdata table
 CREATE EXTERNAL TABLE IF NOT EXISTS cleantablefinal
     (Race_Ethnicity BIGINT,
      Year_of_diagnosis BIGINT,
@@ -92,17 +107,27 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cleantablefinal
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE LOCATION '/user/skashif/finalproject/cleantablefinal'
 TBLPROPERTIES ('skip.header.line.count'='1');
+
+# See the structure info of the table cleantablefinal
 describe cleantablefinal;
+
+# Populate table cleantablefinal with data from the cancerdata table
 INSERT OVERWRITE TABLE cleantablefinal
 SELECT Race_Ethnicity, Year_of_diagnosis, Primary_Site FROM cancerdata WHERE Race_Ethnicity IS NOT NULL AND Year_of_diagnosis IS NOT NULL AND Primary_Site IS NOT NULL;
+
+# Query the content of table cleantablefinal
 SELECT * FROM cleantablefinal LIMIT 10;
------------To Download
+
+
+# To Download
 hdfs dfs -ls finalproject/cleantablefinal
 hdfs dfs -get /user/skashif/finalproject/cleantablefinal/00000*_0
------------OPEN PSFPT
+
+# OPEN PSFPT
 open 34.221.40.43
-Enter username skashif
-password:
+# Enter username
+# Enter password
+
 ls
 get 000000_0
 get 000001_0
