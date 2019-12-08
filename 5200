@@ -94,7 +94,6 @@ LOAD DATA INPATH '/user/username/finalproject/malegen/MALEGEN.csv' INTO TABLE ca
 
 # Query the content of table cancerdata
 SELECT * FROM cancerdata LIMIT 20;
-SELECT * FROM cancerdata GROUP BY primary_site;
 SELECT race_ethnicity, primary_site, age_at_diagnosis from cancerdata ASC LIMIT 100; 
 SELECT primary_site FROM cancerdata GROUP BY primary_site ORDER BY primary_site;
 
@@ -118,9 +117,12 @@ SELECT Race_Ethnicity, Year_of_diagnosis, Primary_Site FROM cancerdata WHERE Rac
 # Query the content of table cleantablefinal
 SELECT * FROM cleantablefinal LIMIT 10;
 
+# Use Ctrl+D to quit hive
 
-# To Download
+# Check the file in table cleantablefinal
 hdfs dfs -ls finalproject/cleantablefinal
+
+# Download the files
 hdfs dfs -get /user/skashif/finalproject/cleantablefinal/00000*_0
 
 # OPEN PSFPT
