@@ -1,4 +1,4 @@
---------remotely access your AWS Hadoop Big Data EMRs
+#remotely access your AWS Hadoop Big Data EMRs
 ssh skashif@34.221.40.43
 --------download the data files
 wget https://www.dropbox.com/s/qccjt2jah6ewif6/teamproject1.zip?dl=0
