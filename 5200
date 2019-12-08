@@ -1,0 +1,115 @@
+--------remotely access your AWS Hadoop Big Data EMRs
+ssh skashif@34.221.40.43
+--------download the data files
+wget https://www.dropbox.com/s/qccjt2jah6ewif6/teamproject1.zip?dl=0
+--------unzip files
+unzip teamproject1.zip?dl=0
+ls
+--------upload the files to hdfs folder 
+hdfs dfs -mkdir finalproject
+hdfs dfs -ls finalproject
+hdfs dfs -mkdir finalproject/cancerdata
+hdfs dfs -mkdir finalproject/cleantablefinal
+hdfs dfs -mkdir finalproject/breast
+hdfs dfs -mkdir finalproject/colrect
+hdfs dfs -mkdir finalproject/digothr
+hdfs dfs -mkdir finalproject/femgen
+hdfs dfs -mkdir finalproject/lymyleuk
+hdfs dfs -mkdir finalproject/malegen
+hdfs dfs -mkdir finalproject/other
+hdfs dfs -mkdir finalproject/respir
+hdfs dfs -mkdir finalproject/urinary
+hdfs dfs -ls finalproject
+hdfs dfs -put teamproject/BREAST.csv finalproject/breast
+hdfs dfs -put teamproject/COLRECT.csv finalproject/colrect
+hdfs dfs -put teamproject/DIGOTHR.csv finalproject/digothr
+hdfs dfs -put teamproject/FEMGEN.csv finalproject/femgen
+hdfs dfs -put teamproject/LYMYLEUK.csv finalproject/lymyleuk
+hdfs dfs -put teamproject/MALEGEN.csv finalproject/malegen
+hdfs dfs -put teamproject/OTHER.csv finalproject/other
+hdfs dfs -put teamproject/RESPIR.csv finalproject/respir
+hdfs dfs -put teamproject/URINARY.csv finalproject/urinary
+hdfs dfs -ls finalproject/colrect
+--------starts the Hive environment
+hive
+use skashif;
+show tables;
+DROP TABLE IF EXISTS cancerdata;
+--------creat table cancerdata 
+CREATE EXTERNAL TABLE IF NOT EXISTS cancerdata
+  (Patient_ID BIGINT,
+   SEER_Registry_ID BIGINT,
+   Marital_Status_at_DX BIGINT,
+   Race_Ethnicity BIGINT, Sex BIGINT,
+   Age_at_diagnosis BIGINT,
+   Year_of_Birth BIGINT,
+   Sequence BIGINT,
+   Month_of_diagnosis BIGINT,
+   Year_of_diagnosis BIGINT,
+   Primary_Site STRING,
+   Laterality BIGINT,
+   Histology BIGINT,
+   Behavior BIGINT,
+   Histologic_Type BIGINT,
+   Behavior_Code BIGINT,
+   Grade STRING,
+   Diagnostic_Confirmation BIGINT,
+   Type_of_Reporting_Source BIGINT,
+   EOD_Tumor_Size BIGINT,
+   EOD_Extension BIGINT,
+   EOD_Extension_Prost_Path BIGINT,
+   EOD_Lymph_Node_Involv BIGINT,
+   Regional_Nodes_Positive BIGINT,
+   EOD_Old_13_Digit BIGINT,
+   Coding_System_for_EOD BIGINT,
+   Tumor_Marker_1 BIGINT,
+   Tumor_Marker_2 BIGINT,
+   Tumor_Marker_3 BIGINT,
+   CS_Tumor_Size BIGINT,
+   CS_Extension BIGINT)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE LOCATION '/user/skashif/finalproject/cancerdata'
+TBLPROPERTIES ('skip.header.line.count'='1');
+
+describe cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/colrect/COLRECT.csv' OVERWRITE INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/breast/BREAST.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/digothr/DIGOTHR.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/femgen/FEMGEN.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/lymyleuk/LYMYLEUK.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/other/OTHER.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
+LOAD DATA INPATH '/user/skashif/finalproject/malegen/MALEGEN.csv' INTO TABLE cancerdata;
+SELECT * FROM cancerdata LIMIT 20;
+SELECT * FROM cancerdata GROUP BY primary_site;
+select race_ethnicity, primary_site, age_at_diagnosis from cancerdata ASC LIMIT 100; 
+SELECT primary_site FROM cancerdata GROUP BY primary_site ORDER BY primary_site;
+CREATE EXTERNAL TABLE IF NOT EXISTS cleantablefinal
+    (Race_Ethnicity BIGINT,
+     Year_of_diagnosis BIGINT,
+     Primary_Site STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE LOCATION '/user/skashif/finalproject/cleantablefinal'
+TBLPROPERTIES ('skip.header.line.count'='1');
+describe cleantablefinal;
+INSERT OVERWRITE TABLE cleantablefinal
+SELECT Race_Ethnicity, Year_of_diagnosis, Primary_Site FROM cancerdata WHERE Race_Ethnicity IS NOT NULL AND Year_of_diagnosis IS NOT NULL AND Primary_Site IS NOT NULL;
+SELECT * FROM cleantablefinal LIMIT 10;
+-----------To Download
+hdfs dfs -ls finalproject/cleantablefinal
+hdfs dfs -get /user/skashif/finalproject/cleantablefinal/00000*_0
+-----------OPEN PSFPT
+open 34.221.40.43
+Enter username skashif
+password:
+ls
+get 000000_0
+get 000001_0
+get 000002_0
+get 000003_0
+get 000004_0
+get 000005_0
+get 000006_0
+get 000007_0
+get 000008_0
