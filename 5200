@@ -129,7 +129,7 @@ SELECT * FROM cleantablefinal LIMIT 10;
 hdfs dfs -ls finalproject/cleantablefinal
 
 # Download the cleantablefinal table
-hdfs dfs -get /user/skashif/finalproject/cleantablefinal
+hdfs dfs -get /user/username/finalproject/cleantablefinal
 
 # For Windows user, you may use psftp to download the tables
 open 34.221.40.43
