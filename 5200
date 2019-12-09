@@ -10,7 +10,7 @@ unzip teamproject1.zip?dl=0
 # Check if the file exist
 ls
 
-# Upload the files to hdfs folder 
+#Create directories to move unzipped files
 hdfs dfs -mkdir finalproject
 hdfs dfs -ls finalproject
 hdfs dfs -mkdir finalproject/cancerdata
