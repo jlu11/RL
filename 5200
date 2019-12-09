@@ -12,7 +12,6 @@ ls
 
 #Create directories to move unzipped files
 hdfs dfs -mkdir finalproject
-hdfs dfs -ls finalproject
 hdfs dfs -mkdir finalproject/cancerdata
 hdfs dfs -mkdir finalproject/cleantablefinal
 hdfs dfs -mkdir finalproject/breast
