@@ -131,7 +131,7 @@ hdfs dfs -ls finalproject/cleantablefinal
 # Download the cleantablefinal table
 hdfs dfs -get /user/skashif/finalproject/cleantablefinal
 
-# OPEN PSFTP
+# For Windows user, you may use psftp to download the tables
 open 34.221.40.43
 # Enter username
 # Enter password
