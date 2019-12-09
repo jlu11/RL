@@ -10,7 +10,7 @@ unzip teamproject1.zip?dl=0
 # Check if the file exist
 ls
 
-# upload the files to hdfs folder 
+# Upload the files to hdfs folder 
 hdfs dfs -mkdir finalproject
 hdfs dfs -ls finalproject
 hdfs dfs -mkdir finalproject/cancerdata
@@ -24,7 +24,12 @@ hdfs dfs -mkdir finalproject/malegen
 hdfs dfs -mkdir finalproject/other
 hdfs dfs -mkdir finalproject/respir
 hdfs dfs -mkdir finalproject/urinary
+
+
+# Navigate to finalproject to make sure if the files are uploaded
 hdfs dfs -ls finalproject
+
+# Put the uplaoded files the appropriate directories 
 hdfs dfs -put teamproject/BREAST.csv finalproject/breast
 hdfs dfs -put teamproject/COLRECT.csv finalproject/colrect
 hdfs dfs -put teamproject/DIGOTHR.csv finalproject/digothr
@@ -36,12 +41,12 @@ hdfs dfs -put teamproject/RESPIR.csv finalproject/respir
 hdfs dfs -put teamproject/URINARY.csv finalproject/urinary
 hdfs dfs -ls finalproject/colrect
 
-# Starts the Hive environment
+# Connecting HiveServer2 using Hive 
 hive
 use username;
 show tables;
 
-# Create table cancerdata
+# Creating a Hive table 'cancerdata' in order to query uploaded files
 DROP TABLE IF EXISTS cancerdata; 
 CREATE EXTERNAL TABLE IF NOT EXISTS cancerdata
   (Patient_ID BIGINT,
@@ -78,10 +83,10 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE LOCATION '/user/username/finalproject/cancerdata'
 TBLPROPERTIES ('skip.header.line.count'='1');
 
-# See the structure info of the table cancerdata
+# Notice the tables that you previously created. You can see the columns in the table by executing:
 describe cancerdata;
 
-# Load the data files into table
+# Load the data files into the cancerdata table
 LOAD DATA INPATH '/user/username/finalproject/colrect/COLRECT.csv' OVERWRITE INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/username/finalproject/breast/BREAST.csv' INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/username/finalproject/digothr/DIGOTHR.csv' INTO TABLE cancerdata;
@@ -92,13 +97,12 @@ LOAD DATA INPATH '/user/username/finalproject/urinary/URINARY.csv' INTO TABLE ca
 LOAD DATA INPATH '/user/username/finalproject/urinary/URINARY.csv' INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/username/finalproject/malegen/MALEGEN.csv' INTO TABLE cancerdata;
 
-# Query the content of table cancerdata
+# Query the cancerdata table 
 SELECT * FROM cancerdata LIMIT 20;
 SELECT race_ethnicity, primary_site, age_at_diagnosis from cancerdata ASC LIMIT 100; 
 SELECT primary_site FROM cancerdata GROUP BY primary_site ORDER BY primary_site;
 
-# Extracts data from the cancerdata table
-# Create table cleantablefinal for storing info from cancerdata table
+# Extract data from the cancerdata table by creating table cleantablefinal table
 CREATE EXTERNAL TABLE IF NOT EXISTS cleantablefinal
     (Race_Ethnicity BIGINT,
      Year_of_diagnosis BIGINT,
@@ -122,7 +126,7 @@ SELECT * FROM cleantablefinal LIMIT 10;
 # Check the file in table cleantablefinal
 hdfs dfs -ls finalproject/cleantablefinal
 
-# Download the files
+# Download the cleantablefinal table
 hdfs dfs -get /user/skashif/finalproject/cleantablefinal/00000*_0
 
 # OPEN PSFPT
@@ -140,3 +144,6 @@ get 000005_0
 get 000006_0
 get 000007_0
 get 000008_0
+
+
+#Visualize the output with Power BI
