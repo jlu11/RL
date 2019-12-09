@@ -25,7 +25,7 @@ hdfs dfs -mkdir finalproject/respir
 hdfs dfs -mkdir finalproject/urinary
 
 
-# Navigate to finalproject to make sure if the files are uploaded
+# Navigate to finalproject to make sure if the files are created
 hdfs dfs -ls finalproject
 
 # Put the uplaoded files the appropriate directories 
@@ -38,6 +38,8 @@ hdfs dfs -put teamproject/MALEGEN.csv finalproject/malegen
 hdfs dfs -put teamproject/OTHER.csv finalproject/other
 hdfs dfs -put teamproject/RESPIR.csv finalproject/respir
 hdfs dfs -put teamproject/URINARY.csv finalproject/urinary
+
+# Navigate to finalproject/colrect to make sure if the .csv files are at the desired directories
 hdfs dfs -ls finalproject/colrect
 
 # Connecting HiveServer2 using Hive 
@@ -82,7 +84,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE LOCATION '/user/username/finalproject/cancerdata'
 TBLPROPERTIES ('skip.header.line.count'='1');
 
-# Notice the tables that you previously created. You can see the columns in the table by executing:
+# DESCRIBE shows the list of columns including partition columns for the cancerdata table. 
 describe cancerdata;
 
 # Load the data files into the cancerdata table
@@ -100,6 +102,7 @@ LOAD DATA INPATH '/user/username/finalproject/malegen/MALEGEN.csv' INTO TABLE ca
 SELECT * FROM cancerdata LIMIT 20;
 SELECT race_ethnicity, primary_site, age_at_diagnosis from cancerdata ASC LIMIT 100; 
 SELECT primary_site FROM cancerdata GROUP BY primary_site ORDER BY primary_site;
+SELECT COUNT(Patient_ID) FROM cancerdata;
 
 # Extract data from the cancerdata table by creating table cleantablefinal table
 CREATE EXTERNAL TABLE IF NOT EXISTS cleantablefinal
@@ -110,7 +113,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE LOCATION '/user/username/finalproject/cleantablefinal'
 TBLPROPERTIES ('skip.header.line.count'='1');
 
-# See the structure info of the table cleantablefinal
+# DESCRIBE shows the list of columns including partition columns for the cleantablefinal table. 
 describe cleantablefinal;
 
 # Populate table cleantablefinal with data from the cancerdata table
@@ -122,13 +125,13 @@ SELECT * FROM cleantablefinal LIMIT 10;
 
 # Use Ctrl+D to quit hive
 
-# Check the file in table cleantablefinal
+# Check if the table cleantablefinal is in the finalproject/cleantablefinal
 hdfs dfs -ls finalproject/cleantablefinal
 
 # Download the cleantablefinal table
-hdfs dfs -get /user/skashif/finalproject/cleantablefinal/00000*_0
+hdfs dfs -get /user/skashif/finalproject/cleantablefinal
 
-# OPEN PSFPT
+# OPEN PSFTP
 open 34.221.40.43
 # Enter username
 # Enter password
