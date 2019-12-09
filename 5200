@@ -1,13 +1,13 @@
 # Remotely access your AWS Hadoop Big Data EMRs
 ssh username@34.221.40.43
 
-# Download the data files
+# Download the dataset
 wget https://www.dropbox.com/s/qccjt2jah6ewif6/teamproject1.zip?dl=0
 
-# Unzip files
+# Unzip dataset
 unzip teamproject1.zip?dl=0
 
-# Check if the file exist
+# Check if the dataset is downloaded
 ls
 
 #Create directories to move unzipped files
@@ -25,10 +25,10 @@ hdfs dfs -mkdir finalproject/respir
 hdfs dfs -mkdir finalproject/urinary
 
 
-# Navigate to finalproject to make sure if the files are created
+# Navigate to finalproject to make sure if the directories are created
 hdfs dfs -ls finalproject
 
-# Put the uplaoded files the appropriate directories 
+# Put the dataset into the appropriate directories 
 hdfs dfs -put teamproject/BREAST.csv finalproject/breast
 hdfs dfs -put teamproject/COLRECT.csv finalproject/colrect
 hdfs dfs -put teamproject/DIGOTHR.csv finalproject/digothr
@@ -39,7 +39,7 @@ hdfs dfs -put teamproject/OTHER.csv finalproject/other
 hdfs dfs -put teamproject/RESPIR.csv finalproject/respir
 hdfs dfs -put teamproject/URINARY.csv finalproject/urinary
 
-# Navigate to finalproject/colrect to make sure if the .csv files are at the desired directories
+# Navigate to finalproject/colrect to make sure if the dataset is at the desired directories
 hdfs dfs -ls finalproject/colrect
 
 # Connecting HiveServer2 using Hive 
@@ -47,7 +47,7 @@ hive
 use username;
 show tables;
 
-# Creating a Hive table 'cancerdata' in order to query uploaded files
+# Creating a Hive table 'cancerdata' in order to query the dataset
 DROP TABLE IF EXISTS cancerdata; 
 CREATE EXTERNAL TABLE IF NOT EXISTS cancerdata
   (Patient_ID BIGINT,
@@ -84,10 +84,10 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE LOCATION '/user/username/finalproject/cancerdata'
 TBLPROPERTIES ('skip.header.line.count'='1');
 
-# DESCRIBE shows the list of columns including partition columns for the cancerdata table. 
+# DESCRIBE shows the list of columns including partition columns for the cancerdata table
 describe cancerdata;
 
-# Load the data files into the cancerdata table
+# Load the dataset into the cancerdata table
 LOAD DATA INPATH '/user/username/finalproject/colrect/COLRECT.csv' OVERWRITE INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/username/finalproject/breast/BREAST.csv' INTO TABLE cancerdata;
 LOAD DATA INPATH '/user/username/finalproject/digothr/DIGOTHR.csv' INTO TABLE cancerdata;
@@ -104,7 +104,7 @@ SELECT race_ethnicity, primary_site, age_at_diagnosis from cancerdata ASC LIMIT 
 SELECT primary_site FROM cancerdata GROUP BY primary_site ORDER BY primary_site;
 SELECT COUNT(Patient_ID) FROM cancerdata;
 
-# Extract data from the cancerdata table by creating table cleantablefinal table
+# Extract data from the cancerdata table by creating a cleantablefinal table
 CREATE EXTERNAL TABLE IF NOT EXISTS cleantablefinal
     (Race_Ethnicity BIGINT,
      Year_of_diagnosis BIGINT,
@@ -116,16 +116,16 @@ TBLPROPERTIES ('skip.header.line.count'='1');
 # DESCRIBE shows the list of columns including partition columns for the cleantablefinal table. 
 describe cleantablefinal;
 
-# Populate table cleantablefinal with data from the cancerdata table
+# Populate cleantablefinal table with data from the cancerdata table
 INSERT OVERWRITE TABLE cleantablefinal
 SELECT Race_Ethnicity, Year_of_diagnosis, Primary_Site FROM cancerdata WHERE Race_Ethnicity IS NOT NULL AND Year_of_diagnosis IS NOT NULL AND Primary_Site IS NOT NULL;
 
-# Query the content of table cleantablefinal
+# Query data from cleantablefinal table 
 SELECT * FROM cleantablefinal LIMIT 10;
 
 # Use Ctrl+D to quit hive
 
-# Check if the table cleantablefinal is in the finalproject/cleantablefinal
+# Check if the cleantablefinal table is in the finalproject/cleantablefinal
 hdfs dfs -ls finalproject/cleantablefinal
 
 # Download the cleantablefinal table
@@ -148,4 +148,4 @@ get 000007_0
 get 000008_0
 
 
-#Visualize the output with Power BI
+#Conver the tables to .csv file and Visualize the output with the Power BI
