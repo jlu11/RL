@@ -83,6 +83,9 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE LOCATION '/user/username/finalproject/cancerdata'
 TBLPROPERTIES ('skip.header.line.count'='1');
 
+# Make sure if the table is created
+show tables;
+
 # DESCRIBE shows the list of columns including partition columns for the cancerdata table
 describe cancerdata;
 
