@@ -45,7 +45,6 @@ hdfs dfs -ls finalproject/colrect
 # Connecting HiveServer2 using Hive 
 hive
 use username;
-show tables;
 
 # Creating a Hive table 'cancerdata' in order to query the dataset
 DROP TABLE IF EXISTS cancerdata; 
